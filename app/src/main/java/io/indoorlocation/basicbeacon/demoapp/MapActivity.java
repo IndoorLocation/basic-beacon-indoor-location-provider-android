@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import io.indoorlocation.basicbeaconlocationprovider.BasicBeaconIndoorLocationProvider;
 import io.indoorlocation.gps.GPSIndoorLocationProvider;
+import io.mapwize.mapwizeformapbox.AccountManager;
 import io.mapwize.mapwizeformapbox.MapOptions;
 import io.mapwize.mapwizeformapbox.MapwizePlugin;
 
@@ -35,8 +36,9 @@ public class MapActivity extends AppCompatActivity {
         mapView = findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
 
-        MapOptions opts = new MapOptions.Builder()
-                .build();
+        mapView.setStyleUrl("http://outdoor.mapwize.io/styles/mapwize/style.json?key=" + AccountManager.getInstance().getApiKey());
+
+        MapOptions opts = new MapOptions.Builder().build();
         mapwizePlugin = new MapwizePlugin(mapView, opts);
         mapwizePlugin.setOnDidLoadListener(new MapwizePlugin.OnDidLoadListener() {
             @Override
