@@ -2,15 +2,16 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
 
 
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionCode 100020
+        versionName "1.0.2"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -27,8 +28,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'org.altbeacon:android-beacon-library:2+'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
-    implementation 'com.github.IndoorLocation:gps-indoor-location-provider-android:1.0.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.github.IndoorLocation:gps-indoor-location-provider-android:1.0.4'
 }

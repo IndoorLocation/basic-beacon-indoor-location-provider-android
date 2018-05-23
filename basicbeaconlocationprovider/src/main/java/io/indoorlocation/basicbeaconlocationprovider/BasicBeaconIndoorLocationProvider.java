@@ -3,7 +3,6 @@ package io.indoorlocation.basicbeaconlocationprovider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.location.Location;
 import android.os.RemoteException;
 
 import org.altbeacon.beacon.Beacon;
@@ -26,7 +25,6 @@ import java.util.Set;
 import io.indoorlocation.core.IndoorLocation;
 import io.indoorlocation.core.IndoorLocationProvider;
 import io.indoorlocation.core.IndoorLocationProviderListener;
-import io.indoorlocation.gps.GPSIndoorLocationProvider;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -41,31 +39,31 @@ public class BasicBeaconIndoorLocationProvider extends IndoorLocationProvider im
     private String apiKey;
     private Map<String,LatLngFloor> locationByBeaconUniqId;
     private Set<String> knownUuids;
-    private GPSIndoorLocationProvider gpsIndoorLocationProvider;
+    private IndoorLocationProvider indoorLocationProvider;
     private boolean isStarted = false;
     private boolean beaconManagerIsConnected = false;
     private IndoorLocation lastLocationFetch;
 
-    public BasicBeaconIndoorLocationProvider(Context context, String apiKey, GPSIndoorLocationProvider gpsIndoorLocationProvider) {
+    public BasicBeaconIndoorLocationProvider(Context context, String apiKey, IndoorLocationProvider indoorLocationProvider) {
         super();
         this.context = context;
         this.apiKey = apiKey;
         this.locationByBeaconUniqId = new HashMap<>();
         this.knownUuids = new HashSet<>();
         this.okHttpClient = new OkHttpClient.Builder().build();
-        this.gpsIndoorLocationProvider = gpsIndoorLocationProvider;
-        this.gpsIndoorLocationProvider.addListener(this);
+        this.indoorLocationProvider = indoorLocationProvider;
+        this.indoorLocationProvider.addListener(this);
         this.beaconManager = BeaconManager.getInstanceForApplication(context);
         this.beaconManager.getBeaconParsers().add(0, new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
     }
 
-    public BasicBeaconIndoorLocationProvider(Context context, String apiKey, GPSIndoorLocationProvider gpsIndoorLocationProvider, OkHttpClient mapwizeClient) {
+    public BasicBeaconIndoorLocationProvider(Context context, String apiKey, IndoorLocation indoorLocationProvider, OkHttpClient mapwizeClient) {
         super();
         this.context = context;
         this.apiKey = apiKey;
         this.okHttpClient = mapwizeClient;
-        this.gpsIndoorLocationProvider = gpsIndoorLocationProvider;
-        this.gpsIndoorLocationProvider.addListener(this);
+        this.indoorLocationProvider = this.indoorLocationProvider;
+        this.indoorLocationProvider.addListener(this);
         this.locationByBeaconUniqId = new HashMap<>();
         this.knownUuids = new HashSet<>();
         this.beaconManager = BeaconManager.getInstanceForApplication(context);
@@ -134,8 +132,8 @@ public class BasicBeaconIndoorLocationProvider extends IndoorLocationProvider im
 
     @Override
     public void start() {
-        if (this.gpsIndoorLocationProvider != null) {
-            this.gpsIndoorLocationProvider.start();
+        if (this.indoorLocationProvider != null) {
+            this.indoorLocationProvider.start();
         }
         this.beaconManager.bind(this);
         this.isStarted = true;
@@ -143,8 +141,8 @@ public class BasicBeaconIndoorLocationProvider extends IndoorLocationProvider im
 
     @Override
     public void stop() {
-        if (this.gpsIndoorLocationProvider != null) {
-            this.gpsIndoorLocationProvider.stop();
+        if (this.indoorLocationProvider != null) {
+            this.indoorLocationProvider.stop();
         }
         this.beaconManager.unbind(this);
         this.isStarted = false;

@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import io.indoorlocation.basicbeaconlocationprovider.BasicBeaconIndoorLocationProvider;
 import io.indoorlocation.gps.GPSIndoorLocationProvider;
+import io.mapwize.mapwizeformapbox.AccountManager;
 import io.mapwize.mapwizeformapbox.MapOptions;
 import io.mapwize.mapwizeformapbox.MapwizePlugin;
 
@@ -29,15 +30,19 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Mapbox.getInstance(this, "pk.eyJ1IjoibWFwd2l6ZSIsImEiOiJjamNhYnN6MjAwNW5pMnZvMnYzYTFpcWVxIn0.veTCqUipGXCw8NwM2ep1Xg");// PASTE YOU MAPBOX API KEY HERE !!! This is a demo key. It is not allowed to use it for production. The key might change at any time without notice. Get your key by signing up at mapbox.com
+        Mapbox.getInstance(this, "pk.mawize");
         setContentView(R.layout.activity_map);
 
         mapView = findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
+
+        mapView.setStyleUrl("http://outdoor.mapwize.io/styles/mapwize/style.json?key=" + AccountManager.getInstance().getApiKey());
+
+        MapOptions opts = new MapOptions.Builder().build();
+        mapwizePlugin = new MapwizePlugin(mapView, opts);
+        mapwizePlugin.setOnDidLoadListener(new MapwizePlugin.OnDidLoadListener() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                mapwizePlugin = new MapwizePlugin(mapView, mapboxMap, new MapOptions());
+            public void didLoad(MapwizePlugin plugin) {
                 startLocationService();
             }
         });
