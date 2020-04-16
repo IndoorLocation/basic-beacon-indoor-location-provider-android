@@ -110,6 +110,7 @@ public class MapActivity extends AppCompatActivity implements MapwizeFragment.On
     private void setupLocationProvider() {
         gpsIndoorLocationProvider = new GPSIndoorLocationProvider(this);
         basicBeaconIndoorLocationProvider = new BasicBeaconIndoorLocationProvider(this, "1f04d780dc30b774c0c10f53e3c7d4ea", gpsIndoorLocationProvider);
+        basicBeaconIndoorLocationProvider.start();
         mapwizeMap.setIndoorLocationProvider(basicBeaconIndoorLocationProvider);
     }
 
